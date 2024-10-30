@@ -4,17 +4,13 @@ async function compareTexts() {
 
     if (text1 && text2) {
         const apiUrl = 'https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2';
-
         const headers = {
-            'Authorization': `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`, // Reemplaza con tu clave de API
+            'Authorization': `Bearer YOUR_HUGGING_FACE_API_KEY`, // Reemplaza con tu clave de API
             'Content-Type': 'application/json'
         };
 
         const body = JSON.stringify({
-            inputs: {
-                source_sentence: text1,
-                sentences: [text2]
-            }
+            inputs: [text1, text2]
         });
 
         try {
@@ -29,7 +25,7 @@ async function compareTexts() {
             }
 
             const result = await response.json();
-            const similarityScore = result[0]; // Supone que devuelve la puntuación directamente
+            const similarityScore = result.similarity || result[0]; 
             document.getElementById('result').innerText = `Similarity score: ${similarityScore.toFixed(2)}`;
         } catch (error) {
             console.error("Error al comparar textos:", error);
@@ -40,7 +36,4 @@ async function compareTexts() {
     }
 }
 
-    normA = Math.sqrt(normA);
-    normB = Math.sqrt(normB);
-    return dotProduct / (normA * normB);
 }
