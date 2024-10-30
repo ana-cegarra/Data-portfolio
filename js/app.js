@@ -1,21 +1,17 @@
-body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin-top: 50px;
-}
+async function compareTexts() {
+    const text1 = document.getElementById('text1').value;
+    const text2 = document.getElementById('text2').value;
 
-textarea {
-    width: 80%;
-    height: 100px;
-    margin: 10px 0;
-}
+    if (text1 && text2) {
+        const response = await fetch('<API_URL>', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text1, text2 })
+        });
 
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-}
-
-#result {
-    margin-top: 20px;
-    font-weight: bold;
+        const result = await response.json();
+        document.getElementById('result').innerText = `Similarity score: ${result.similarity}`;
+    } else {
+        document.getElementById('result').innerText = 'Please enter both texts to compare.';
+    }
 }
