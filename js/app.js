@@ -3,6 +3,7 @@ async function compareTexts() {
     const text2 = document.getElementById('text2').value;
 
     if (text1 && text2) {
+        // Ejemplo de llamada a una API para comparar textos (reemplaza <API_URL>)
         const response = await fetch('<API_URL>', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
