@@ -3,16 +3,34 @@ async function compareTexts() {
     const text2 = document.getElementById('text2').value;
 
     if (text1 && text2) {
-        // Llamada a una API para comparar textos (reemplaza <API_URL> con la URL de tu API)
+        // API URL para Hugging Face
+        const apiUrl = 'https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2';
+
+        // Configura la solicitud
+        const headers = {
+            'Authorization': `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`, // Reemplaza con tu clave de API
+            'Content-Type': 'application/json'
+        };
+
+        const body = JSON.stringify({
+            inputs: [text1, text2]
+        });
+
         try {
-            const response = await fetch('<API_URL>', {
+            const response = await fetch(apiUrl, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text1, text2 })
+                headers: headers,
+                body: body
             });
 
-            const result = await response.json();
-            document.getElementById('result').innerText = `Similarity score: ${result.similarity}`;
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+
+            const embeddings = await response.json();
+            // Calcula la similitud (coseno) entre los dos embeddings
+            const similarityScore = cosineSimilarity(embeddings[0], embeddings[1]);
+            document.getElementById('result').innerText = `Similarity score: ${similarityScore.toFixed(2)}`;
         } catch (error) {
             console.error("Error al comparar textos:", error);
             document.getElementById('result').innerText = 'Hubo un error al comparar los textos.';
@@ -20,4 +38,21 @@ async function compareTexts() {
     } else {
         document.getElementById('result').innerText = 'Please enter both texts to compare.';
     }
+}
+
+// Función para calcular la similitud del coseno
+function cosineSimilarity(vecA, vecB) {
+    let dotProduct = 0;
+    let normA = 0;
+    let normB = 0;
+
+    for (let i = 0; i < vecA.length; i++) {
+        dotProduct += vecA[i] * vecB[i];
+        normA += vecA[i] * vecA[i];
+        normB += vecB[i] * vecB[i];
+    }
+
+    normA = Math.sqrt(normA);
+    normB = Math.sqrt(normB);
+    return dotProduct / (normA * normB);
 }
