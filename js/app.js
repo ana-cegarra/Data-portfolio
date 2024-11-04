@@ -35,5 +35,3 @@ async function compareTexts() {
         document.getElementById('result').innerText = 'Please enter both texts to compare.';
     }
 }
-
-}
