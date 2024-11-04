@@ -11,10 +11,7 @@ async function compareTexts() {
 
         // Ajuste en la estructura del cuerpo
         const body = JSON.stringify({
-            inputs: {
-                source_sentence: text1,
-                sentences: [text2]
-            }
+            inputs: [text1, text2]
         });
 
         try {
